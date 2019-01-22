@@ -167,14 +167,15 @@ void train_char_rnn(char *cfgfile, char *weightfile, char *filename, int clear, 
         size = strlen((const char*)text);
     }
 
-    char *backup_directory = "/home/pjreddie/backup/";
+    char *backup_directory = "backup/";
     char *base = basecfg(cfgfile);
     fprintf(stderr, "%s\n", base);
     float avg_loss = -1;
     network *net = load_network(cfgfile, weightfile, clear);
 
     int inputs = net->inputs;
-    fprintf(stderr, "Learning Rate: %g, Momentum: %g, Decay: %g, Inputs: %d %d %d\n", net->learning_rate, net->momentum, net->decay, inputs, net->batch, net->time_steps);
+    fprintf(stderr, "Learning Rate: %g, Momentum: %g, Decay: %g, Inputs: %d %d %d\n",
+     net->learning_rate, net->momentum, net->decay, inputs, net->batch, net->time_steps);
     int batch = net->batch;
     int steps = net->time_steps;
     if(clear) *net->seen = 0;
@@ -207,7 +208,8 @@ void train_char_rnn(char *cfgfile, char *weightfile, char *filename, int clear, 
         avg_loss = avg_loss*.9 + loss*.1;
 
         size_t chars = get_current_batch(net)*batch;
-        fprintf(stderr, "%d: %f, %f avg, %f rate, %lf seconds, %f epochs\n", i, loss, avg_loss, get_current_rate(net), sec(clock()-time), (float) chars/size);
+        fprintf(stderr, "%d: %f, %f avg, %f rate, %lf seconds, %f epochs\n",
+         i, loss, avg_loss, get_current_rate(net), sec(clock()-time), (float) chars/size);
 
         for(j = 0; j < streams; ++j){
             //printf("%d\n", j);

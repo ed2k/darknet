@@ -79,7 +79,7 @@ layer make_connected_layer(int batch, int inputs, int outputs, ACTIVATION activa
         l.x_norm = calloc(batch*outputs, sizeof(float));
     }
 
-#ifdef GPU
+if (gpu_index >= 0) {
     l.forward_gpu = forward_connected_layer_gpu;
     l.backward_gpu = backward_connected_layer_gpu;
     l.update_gpu = update_connected_layer_gpu;
@@ -123,7 +123,7 @@ layer make_connected_layer(int batch, int inputs, int outputs, ACTIVATION activa
         cudnnSetTensor4dDescriptor(l.normTensorDesc, CUDNN_TENSOR_NCHW, CUDNN_DATA_FLOAT, 1, l.out_c, 1, 1); 
 #endif
     }
-#endif
+} // gpu_index
     l.activation = activation;
     fprintf(stderr, "connected                            %4d  ->  %4d\n", inputs, outputs);
     return l;
